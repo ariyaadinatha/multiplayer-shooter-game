@@ -9,12 +9,15 @@ server = "192.168.1.13"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+state = True
 
 try:
     s.bind((server, port))
 
 except socket.error as e:
-    str(e)
+    print(str(e))
+    state = False
+
 
 # Max client
 s.listen(2)
@@ -22,8 +25,8 @@ s.listen(2)
 print("Waiting for a connection, server started")
 
 
-players = [Player(150, 600, 0, 0),
-           Player(600, 600, 1, 0)]
+players = [Player(300, 600, 0, 0),
+           Player(300, 100, 1, 0)]
 
 
 def threaded_client(conn, player):
@@ -58,9 +61,10 @@ def threaded_client(conn, player):
 
 
 currentPlayer = 0
-while True:
+while state:
     conn, addr = s.accept()
     print("Connected to: ", addr)
 
     start_new_thread(threaded_client, (conn, currentPlayer))
+
     currentPlayer += 1

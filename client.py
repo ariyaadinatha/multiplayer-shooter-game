@@ -24,19 +24,31 @@ lose = False
 def redrawWindow(win, player, player2):
     #win.fill((255, 255, 255))
     win.blit(BACKGROUND, (0, 0))
+    # Score
     score1_label = main_font.render(
         f"score: {player.getScore()}", 1, (255, 255, 255))
     score2_label = main_font.render(
         f"score: {player2.getScore()}", 1, (255, 255, 255))
+    # Lives
     lives1_label = main_font.render(
         f"lives: {player.getLives()}", 1, (255, 255, 255))
     lives2_label = main_font.render(
         f"lives: {player2.getLives()}", 1, (255, 255, 255))
+    # Health
+    health1_label = main_font.render(
+        f"hp: {player.getHealth()}", 1, (255, 255, 255))
+    health2_label = main_font.render(
+        f"hp: {player2.getHealth()}", 1, (255, 255, 255))
+
     win.blit(score1_label, (10, lives2_label.get_height() + 10))
     win.blit(lives1_label, (10, 10))
     win.blit(score2_label, (width - score2_label.get_width() -
                             10, lives1_label.get_height() + 10))
     win.blit(lives2_label, (width - lives2_label.get_width() - 10, 10))
+    win.blit(health1_label, (player.getX() -
+                             health1_label.get_width(), player.getY()))
+    win.blit(health2_label, (player2.getX() -
+                             health2_label.get_width(), player2.getY()))
 
     if (lose == True):
         lose_label = main_font.render("You Lose", 1, (255, 255, 255))
@@ -53,9 +65,15 @@ def main():
     n = Network()
     p = n.getObject()
     clock = pygame.time.Clock()
+    ammoVel = -5
+
+    if (p.getShip() == 1):
+        ammoVel = -ammoVel
+
     while run:
         clock.tick(FPS)
         p2 = n.send(p)
+        redrawWindow(win, p, p2)
 
         # print(p.getLives())
 
@@ -68,10 +86,9 @@ def main():
                 run = False
                 pygame.quit()
         p.move()
-        redrawWindow(win, p, p2)
 
-        p.moveAmmo(5, p2)
-        print(p.getHealth())
+        p.moveAmmo(ammoVel, p2)
+        # print(p.getHealth())
 
 
 main()
