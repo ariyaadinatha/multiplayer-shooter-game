@@ -5,8 +5,11 @@ from _thread import *
 from player import Player
 
 # Local
-server = "192.168.1.13"
-port = 5555
+server = input("IP Address : ")
+port = int(input("Port : "))
+
+# server = "192.168.1.13"
+# port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 state = True
@@ -34,7 +37,7 @@ def threaded_client(conn, player):
     reply = ""
     while True:
         try:
-            print(f"player : {player}")
+            print(f"player : {player+1}")
             data = pickle.loads(conn.recv(2048))
             players[player] = data
 

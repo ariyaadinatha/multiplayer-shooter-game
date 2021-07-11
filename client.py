@@ -23,7 +23,6 @@ lose = False
 
 
 def redrawWindow(win, player, player2):
-    #win.fill((255, 255, 255))
     win.blit(BACKGROUND, (0, 0))
     # Score
     score1_label = main_font.render(
@@ -94,17 +93,11 @@ def main():
         p2 = n.send(p)
         redrawWindow(win, p, p2)
 
-        # print(p.getLives())
         if (p.getHealth() <= 0):
             p.reduceLives()
             p.restoreHealth(100)
         if (p.getLives() <= 0):
             loseLabel()
-            # lose = True
-            # print(lose)
-
-        # if (p.getLives() == -1):
-        #     run = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -113,7 +106,6 @@ def main():
         p.move()
 
         p.moveAmmo(ammoVel, p2)
-        # print(p.getHealth())
 
 
 main()

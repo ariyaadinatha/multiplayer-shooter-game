@@ -40,25 +40,6 @@ BEAM = pygame.transform.rotate(BEAM, 90)
 imageOfShip = [RED_SPACE_SHIP, YELLOW_SPACE_SHIP]
 imageOfAmmo = [BULLET, BOMB, BEAM]
 
-# ammoDict = {
-#     ammoType0: {
-#         'index': 0,
-#         'damage': 10,
-#         'cost': 0
-#     },
-#     ammoType1: {
-#         'index': 1,
-#         'damage': 25,
-#         'cost': 100
-#     },
-#     ammoType2: {
-#         'index': 2,
-#         'damage': 50,
-#         'cost': 250
-#     }
-#
-# }
-
 
 class Ship():
 
@@ -69,36 +50,23 @@ class Ship():
         self.cooldown = 0
         self.ammos = []
         self.vel = 5  # speed
-        # self.color = color
         self.shipImage = shipImage
         self.ammoImage = ammoImage
         self.hitbox = (self.x, self.y, SHIP_WIDTH, SHIP_HEIGHT)
         self.damage = 10
-        # self.height = 100
-        # self.width = 100
 
     def draw(self, win):
-        # pygame.draw.rect(win, self.color, self.rect)
-        # rect = imageOfShip[self.shipImage].get_rect()
         win.blit(imageOfShip[self.shipImage], (self.x, self.y))
         self.hitbox = (self.x, self.y, SHIP_WIDTH, SHIP_HEIGHT)
-        # pygame.draw.rect(win, (255, 0, 0), self.hitbox, 1)
 
         for ammo in self.ammos:
             ammo.draw(win)
-        # pygame.mask.from_surface(imageOfShip[self.shipImage])
 
     def shoot(self):
         if (self.cooldown == 0):
             ammo = Ammo((self.x + BULLET_CENTER), self.y, self.ammoImage)
             self.ammos.append(ammo)
             self.cooldown = 1
-
-    # def cooldown(self):
-    #     if self.cooldown >= COOLDOWN_TIME:
-    #         self.cooldown = 0
-    #     elif self.cooldown > 0:
-    #         self.cooldown += 1
 
     def moveAmmo(self, vel, obj):
         # cooldown
@@ -107,11 +75,8 @@ class Ship():
         elif self.cooldown > 0:
             self.cooldown += 1
         for ammo in self.ammos:
-            # print(f'ammo.x : {ammo.x}')
-            # print(f'ammo.y : {ammo.y}')
             if (ammo.y < obj.hitbox[1] + obj.hitbox[3] and ammo.y > obj.hitbox[1]):
                 if (ammo.x > obj.hitbox[0] and ammo.x < obj.hitbox[0] + SHIP_WIDTH):
-                    # print(f"hit")
                     self.ammos.remove(ammo)
                     self.hit(obj)
 
@@ -119,15 +84,10 @@ class Ship():
             if ammo.off_screen(height):
                 self.ammos.remove(ammo)
                 self.addScore(self.damage)
-            # elif ammo.collision(obj):
-            #     obj.health -= 10
-            #     self.ammos.remove(ammo)
 
     def hit(self, p2):
         self.reduceHealth()
         p2.addScore(100)
-        # p2.reduceHealth()
-        # print('hit')
 
     def getHealth(self):
         return self.health
@@ -139,14 +99,10 @@ class Ship():
 class Player(Ship):
     def __init__(self, x, y, shipImage, ammoImage):
         super().__init__(x, y, shipImage, ammoImage)
-        # self.ship_img = RED_SPACE_SHIP
-        # self.ammo_img = BULLET
-        # self.mask = pygame.mask.from_surface(imageOfShip[self.shipImage])
 
         self.maxHealth = self.health
         self.score = 0
         self.lives = 3
-        # self.rect = (self.x, self.y, self.width, self.height)
 
     def move(self):
         keys = pygame.key.get_pressed()
@@ -162,7 +118,6 @@ class Player(Ship):
             self.shoot()
         if keys[pygame.K_e]:
             self.shop()
-        # self.update()
 
     def addScore(self, val):
         self.score += val
@@ -216,14 +171,6 @@ class Player(Ship):
             self.upAmmo()
             self.addDamage(40)
 
-        print('a')
-
-
-# def collide(obj1, obj2):
-#     offsetX = obj2.x - obj1.x
-#     offsety = obj2.y - obj1.y
-#     return obj1.mask.overlap(obj2, (offsetX, offsety)) != None
-
 
 class Ammo():
     def __init__(self, x, y, ammoImage):
@@ -231,23 +178,13 @@ class Ammo():
         self.y = y
         self.ammoImage = ammoImage
         self.hitbox = (self.x, self.y, 30, 15)
-        # self.ammoVel = -3
 
     def draw(self, win):
         win.blit(imageOfAmmo[self.ammoImage], (self.x, self.y))
         self.hitbox = (self.x, self.y, BULLET_WIDTH, BULLET_HEIGHT)
-        # pygame.draw.rect(win, (255, 0, 0), self.hitbox, 1)
 
     def move(self, vel):
         self.y += vel
 
-    # def getAmmoVel(self):
-    #     return self.ammoVel
-
     def off_screen(self, height):
-        # if not(self.y <= height and self.y >= 0):
-        #     print("offscreen")
         return not(self.y <= height and self.y >= 0)
-
-    # def collision(self, obj):
-    #     return collide(self, obj)
